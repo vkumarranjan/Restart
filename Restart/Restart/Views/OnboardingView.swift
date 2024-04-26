@@ -15,6 +15,7 @@ struct OnboardingView: View {
     @State private var buttonOffset: CGFloat = 0
     @State private var isAnimation: Bool = false
     @State private var imageOffset: CGSize = .zero///CGSize(width: 0, height: 0)
+    @State private var indiactoeOpacity: Double = 1.0
     
     var body: some View {
         
@@ -50,6 +51,11 @@ struct OnboardingView: View {
                 
                 ZStack {
                     CircleGroupView(shapeColor: .white, shapeOpacity: 0.2)
+                        .offset(x: imageOffset.width * -1)
+                        .blur(radius: abs(imageOffset.width / 5))
+                        .animation(.easeInOut(duration: 1), value: imageOffset)
+                    
+                    
                     Image("character-1")
                         .resizable()
                         .scaledToFit()
@@ -62,14 +68,32 @@ struct OnboardingView: View {
                             .onChanged { gesture in
                                 if abs(imageOffset.width) <= 150 {
                                     imageOffset = gesture.translation
+                                    withAnimation(.linear (duration: 0.25)) {
+                                        indiactoeOpacity = 0
+                                    }
                                 }
                             }
                             .onEnded { _ in
                                 imageOffset = .zero
+                                withAnimation(.linear (duration: 0.25)) {
+                                    indiactoeOpacity = 1
+                                }
                             }
                         ) //: Gesture
                         .animation(.easeOut(duration: 1), value: imageOffset)
                 }
+                
+                .overlay (
+                
+                Image(systemName: "arrow.left.and.right.circle")
+                    .font(.system(size: 44, weight: .ultraLight))
+                    .foregroundColor(.white)
+                    .opacity(isAnimation ? 1 : 0)
+                    .animation(.easeIn(duration: 1).delay(2), value: isAnimation)
+                    .opacity(indiactoeOpacity)
+                  ,alignment: .bottom
+                )
+                
                 
                 Spacer()
                 
