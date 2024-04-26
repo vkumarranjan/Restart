@@ -16,6 +16,7 @@ struct OnboardingView: View {
     @State private var isAnimation: Bool = false
     @State private var imageOffset: CGSize = .zero///CGSize(width: 0, height: 0)
     @State private var indiactoeOpacity: Double = 1.0
+    @State private var testTitle: String = "Share."
     
     var body: some View {
         
@@ -28,10 +29,12 @@ struct OnboardingView: View {
                 Spacer()
                 
                 VStack(spacing: 0){
-                  Text("Share.")
+                  Text(testTitle)
                         .font(.system(size: 60))
                         .fontWeight(.heavy)
                         .foregroundColor(.white)
+                        .transition(.opacity)
+                        .id(testTitle)
                     
                     Text("""
                       It's not how much we give but
@@ -70,6 +73,7 @@ struct OnboardingView: View {
                                     imageOffset = gesture.translation
                                     withAnimation(.linear (duration: 0.25)) {
                                         indiactoeOpacity = 0
+                                        testTitle = "Give."
                                     }
                                 }
                             }
@@ -77,6 +81,7 @@ struct OnboardingView: View {
                                 imageOffset = .zero
                                 withAnimation(.linear (duration: 0.25)) {
                                     indiactoeOpacity = 1
+                                    testTitle = "Share."
                                 }
                             }
                         ) //: Gesture
